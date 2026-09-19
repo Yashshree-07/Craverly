@@ -1,4 +1,5 @@
 import { useFilterStore } from "../../store/filterStore";
+import { useLocationStore } from "../../store/locationStore";
 import { allCuisines } from "../../data/mockRestaurants";
 import { cn } from "../../lib/utils";
 import { SlidersHorizontal, X } from "lucide-react";
@@ -19,12 +20,18 @@ export function FilterBar() {
     resetFilters,
   } = useFilterStore();
 
+  const { latitude, longitude } = useLocationStore();
+  const canUseNearMe = latitude != null && longitude != null;
+
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const hasActiveFilters =
     cuisines.length > 0 || minRating > 0 || vegType !== "all" || hasOffers;
 
   const sortOptions: { value: typeof sortBy; label: string }[] = [
+    ...(canUseNearMe
+      ? [{ value: "nearMe" as const, label: "Near me" }]
+      : []),
     { value: "popularity", label: "Popularity" },
     { value: "rating", label: "Rating" },
     { value: "deliveryTime", label: "Delivery Time" },

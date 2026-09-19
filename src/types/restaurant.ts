@@ -87,5 +87,11 @@ export interface RestaurantFilters {
   vegType: VegType | "all";
   hasOffers: boolean;
   maxDeliveryTime: number | null;
-  sortBy: "rating" | "deliveryTime" | "costLowHigh" | "costHighLow" | "popularity";
+  sortBy:
+    | "rating"
+    | "deliveryTime"
+    | "costLowHigh"
+    | "costHighLow"
+    | "popularity"
+    | "nearMe";
 }

@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Star, Clock, MapPin, Phone, Heart, ChevronLeft } from "lucide-react";
 import {
   getRestaurantById,
@@ -9,6 +9,7 @@ import {
 import { MenuItemCard } from "../components/restaurant/MenuItemCard";
 import { ReviewsList } from "../components/restaurant/ReviewsList";
 import { useUserStore } from "../store/userStore";
+import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 import { cn } from "../lib/utils";
 import { toast } from "sonner";
 
@@ -23,6 +24,12 @@ export default function RestaurantDetail() {
 
   const { user, isAuthenticated, toggleFavoriteRestaurant } = useUserStore();
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const { add: addRecentlyViewed } = useRecentlyViewed();
+
+  // Track recent visits for the home page section
+  useEffect(() => {
+    if (restaurant) addRecentlyViewed(restaurant.id);
+  }, [restaurant, addRecentlyViewed]);
 
   const categories = useMemo(
     () => Array.from(new Set(menuItems.map((item) => item.category))),

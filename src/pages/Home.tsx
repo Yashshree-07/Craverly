@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { HeroSearch } from "../components/restaurant/HeroSearch";
 import { CategoryTiles } from "../components/restaurant/CategoryTiles";
 import { RestaurantSection } from "../components/restaurant/RestaurantSection";
 import { mockRestaurants } from "../data/mockRestaurants";
+import { useLocationStore } from "../store/locationStore";
+import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const { city, area } = useLocationStore();
+  const { restaurants: recentlyViewed } = useRecentlyViewed();
 
   // Simulate initial data fetch for skeleton demo
   useEffect(() => {
@@ -23,6 +27,23 @@ export default function Home() {
     .sort((a, b) => a.deliveryTimeMinutes - b.deliveryTimeMinutes)
     .slice(0, 4);
 
+  // Restaurants in the user's selected area (fallback: city, then all)
+  const popularInArea = useMemo(() => {
+    const areaMatches = area
+      ? mockRestaurants.filter((r) => r.area === area && r.city === city)
+      : [];
+    const cityMatches = mockRestaurants.filter((r) => r.city === city);
+    const base = areaMatches.length > 0 ? areaMatches : cityMatches;
+
+    return [...base]
+      .sort((a, b) => b.ratingCount - a.ratingCount)
+      .slice(0, 4);
+  }, [city, area]);
+
+  const popularInAreaTitle = area
+    ? `Popular in ${area}`
+    : `Popular in ${city}`;
+
   return (
     <div>
       <HeroSearch />
@@ -33,6 +54,14 @@ export default function Home() {
         </h2>
         <CategoryTiles />
       </div>
+
+      {recentlyViewed.length > 0 && (
+        <RestaurantSection
+          title="Recently viewed"
+          restaurants={recentlyViewed}
+          isLoading={isLoading}
+        />
+      )}
 
       <RestaurantSection
         title="Top rated near you"
@@ -47,6 +76,12 @@ export default function Home() {
           isLoading={isLoading}
         />
       )}
+
+      <RestaurantSection
+        title={popularInAreaTitle}
+        restaurants={popularInArea}
+        isLoading={isLoading}
+      />
 
       <RestaurantSection
         title="Fastest delivery"

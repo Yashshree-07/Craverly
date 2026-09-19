@@ -3,7 +3,8 @@ import { Star, Clock, Heart } from "lucide-react";
 import type { Restaurant } from "../../types/restaurant";
 import { Badge } from "../common/Badge";
 import { useUserStore } from "../../store/userStore";
-import { cn } from "../../lib/utils";
+import { useLocationStore } from "../../store/locationStore";
+import { haversineDistanceKm, cn } from "../../lib/utils";
 import { toast } from "sonner";
 
 interface RestaurantCardProps {
@@ -13,6 +14,17 @@ interface RestaurantCardProps {
 export function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const { user, isAuthenticated, toggleFavoriteRestaurant } = useUserStore();
   const isFavorite = user?.favoriteRestaurantIds.includes(restaurant.id) ?? false;
+
+  const { latitude, longitude } = useLocationStore();
+  const distance =
+    latitude != null && longitude != null
+      ? haversineDistanceKm(
+          latitude,
+          longitude,
+          restaurant.latitude,
+          restaurant.longitude
+        )
+      : restaurant.distanceKm;
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -91,9 +103,14 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
 
         <div className="flex items-center justify-between mt-2 text-sm text-gray-600 dark:text-gray-400">
           <span>₹{restaurant.costForTwo} for two</span>
-          <div className="flex items-center gap-1">
-            <Clock size={13} />
-            {restaurant.deliveryTimeMinutes} min
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1">
+              <Clock size={13} />
+              {restaurant.deliveryTimeMinutes} min
+            </span>
+            <span className="text-xs text-gray-400">
+              {distance} km
+            </span>
           </div>
         </div>
       </div>

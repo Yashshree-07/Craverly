@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2 } from "lucide-react";
 import { useFilterStore } from "../../store/filterStore";
-import { useGeolocation } from "../../hooks/useGeolocation";
+import { useLocationStore } from "../../store/locationStore";
+import { SearchAutocomplete } from "./SearchAutocomplete";
 
 export function HeroSearch() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const setSearchQuery = useFilterStore((state) => state.setSearchQuery);
-  const { requestLocation, isLoading, error } = useGeolocation();
+  const { detect, isLoading, error, label } = useLocationStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(query);
+  const handleSearch = (searchQuery: string) => {
+    setSearchQuery(searchQuery);
     navigate("/restaurants");
   };
+
+  const locationLabel = label();
 
   return (
     <div className="bg-gradient-to-br from-primary-600 to-primary-700 py-16 px-4">
@@ -27,32 +29,41 @@ export function HeroSearch() {
         </p>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch(query);
+          }}
           className="flex flex-col sm:flex-row gap-2 bg-white rounded-2xl sm:rounded-full p-2 shadow-xl"
         >
           <button
             type="button"
-            onClick={requestLocation}
+            onClick={detect}
             className="flex items-center gap-2 px-4 py-2.5 text-gray-700 text-sm font-medium border-b sm:border-b-0 sm:border-r border-gray-200 whitespace-nowrap"
+            title="Detect my location"
           >
             {isLoading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <MapPin size={16} className="text-primary-600" />
             )}
-            {isLoading ? "Locating..." : "Detect location"}
+            <span className="max-w-[110px] truncate">
+              {isLoading
+                ? "Locating..."
+                : error
+                  ? "Set location"
+                  : locationLabel}
+            </span>
           </button>
 
-          <div className="flex items-center flex-1 gap-2 px-3">
-            <Search size={18} className="text-gray-400 shrink-0" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search for restaurant or dish"
-              className="w-full py-2.5 text-sm text-gray-900 focus:outline-none"
-            />
-          </div>
+          <SearchAutocomplete
+            value={query}
+            onChange={setQuery}
+            onSubmit={handleSearch}
+            placeholder="Search for restaurant or dish"
+            showIcon={false}
+            className="flex-1 px-2"
+            inputClassName="py-2 text-gray-900"
+          />
 
           <button
             type="submit"
@@ -62,10 +73,8 @@ export function HeroSearch() {
           </button>
         </form>
 
-        {error && (
-          <p className="text-primary-100 text-xs mt-2">
-            Couldn't get location — you can still search manually.
-          </p>
+        {(error || !isLoading) && error && (
+          <p className="text-primary-100 text-xs mt-2">{error}</p>
         )}
       </div>
     </div>

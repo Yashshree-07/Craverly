@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Search, ShoppingCart, User, MapPin, Menu, X, Moon, Sun } from "lucide-react";
+import { ShoppingCart, User, X, Moon, Sun, Menu } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { useUserStore } from "../../store/userStore";
 import { useFilterStore } from "../../store/filterStore";
 import { CartDrawer } from "../cart/CartDrawer";
+import { LocationSelector } from "./LocationSelector";
+import { SearchAutocomplete } from "../restaurant/SearchAutocomplete";
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -15,18 +17,21 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [localSearch, setLocalSearch] = useState("");
+  const [desktopSearch, setDesktopSearch] = useState("");
+  const [mobileSearch, setMobileSearch] = useState("");
 
   const totalItems = useCartStore((state) => state.getTotalItems());
   const { isAuthenticated, user } = useUserStore();
   const setSearchQuery = useFilterStore((state) => state.setSearchQuery);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(localSearch);
+  const handleSearchSubmit = (searchQuery: string) => {
+    setSearchQuery(searchQuery);
     navigate("/restaurants");
     setMobileMenuOpen(false);
   };
+
+  const searchInputClassName =
+    "rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-0";
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 shadow-sm">
@@ -36,29 +41,15 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
             <span className="text-2xl font-bold text-primary-600">Craverly</span>
           </Link>
 
-          <button className="hidden md:flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 transition-colors">
-            <MapPin size={16} />
-            <span className="max-w-[140px] truncate">Chennai, TN</span>
-          </button>
+          <LocationSelector />
 
-          <form
+          <SearchAutocomplete
+            value={desktopSearch}
+            onChange={setDesktopSearch}
             onSubmit={handleSearchSubmit}
             className="hidden md:flex flex-1 max-w-md mx-4"
-          >
-            <div className="relative w-full">
-              <Search
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="text"
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                placeholder="Search restaurants or dishes"
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-          </form>
+            inputClassName={searchInputClassName}
+          />
 
           <div className="hidden md:flex items-center gap-4">
             <button
@@ -104,19 +95,12 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
 
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-3">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <Search
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="text"
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                placeholder="Search restaurants or dishes"
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </form>
+            <SearchAutocomplete
+              value={mobileSearch}
+              onChange={setMobileSearch}
+              onSubmit={handleSearchSubmit}
+              inputClassName={searchInputClassName}
+            />
 
             <div className="flex items-center justify-around pt-2 border-t border-gray-200 dark:border-gray-800">
               <button
