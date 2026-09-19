@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config "../tailwind.config.js";
+
+/* Class-based dark mode (toggles .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
 
 body {
   @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
