@@ -24,7 +24,7 @@ export default function Layout() {
   }, [isDarkMode]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950">
+    <div className="min-h-screen flex flex-col bg-ivory-50 dark:bg-gray-950">
       <Navbar
         isDarkMode={isDarkMode}
         onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}

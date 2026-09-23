@@ -264,9 +264,9 @@ export default function RestaurantDetail() {
               {restaurant.offers.map((offer) => (
                 <div
                   key={offer.id}
-                  className="shrink-0 bg-primary-50 dark:bg-primary-900/20 border border-dashed border-primary-400 rounded-lg px-3 py-2"
+                  className="shrink-0 bg-peach-50 dark:bg-peach-900/20 border border-dashed border-peach-400 rounded-lg px-3 py-2"
                 >
-                  <p className="text-xs font-bold text-primary-700 dark:text-primary-400">
+                  <p className="text-xs font-bold text-peach-700 dark:text-peach-400">
                     {offer.code}
                   </p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">

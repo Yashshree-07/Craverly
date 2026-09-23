@@ -86,7 +86,7 @@ export function ImpactTracker() {
 
         <div className="grid grid-cols-3 gap-3 mt-5">
           <MiniStat
-            icon={<Clock size={14} className="text-amber-500" />}
+            icon={<Clock size={14} className="text-peach-500" />}
             label="Cooking hours saved"
             value={String(stats.hoursSaved)}
           />

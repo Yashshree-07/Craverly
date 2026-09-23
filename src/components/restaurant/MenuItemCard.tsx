@@ -56,7 +56,7 @@ export function MenuItemCard({ item, restaurantId }: MenuItemCardProps) {
           <div className="flex items-center gap-2">
             <VegIndicator type={item.vegType} />
             {item.isBestseller && (
-              <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wide">
+              <span className="text-[10px] font-bold text-peach-600 uppercase tracking-wide">
                 Bestseller
               </span>
             )}
@@ -77,7 +77,7 @@ export function MenuItemCard({ item, restaurantId }: MenuItemCardProps) {
             <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[11px] text-gray-500">
               {item.nutrition.calories !== undefined && (
                 <span className="flex items-center gap-0.5">
-                  <Flame size={11} className="text-amber-500" />
+                  <Flame size={11} className="text-peach-500" />
                   {item.nutrition.calories} cal
                 </span>
               )}

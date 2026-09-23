@@ -18,7 +18,7 @@ export function AuthLayout({
   footerLinkTo,
 }: AuthLayoutProps) {
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-ivory-50 dark:bg-gray-950">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="text-2xl font-bold text-primary-600">

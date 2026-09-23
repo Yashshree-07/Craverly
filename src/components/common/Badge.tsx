@@ -9,7 +9,7 @@ interface BadgeProps {
 const variantStyles = {
   default: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
   success: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
-  warning: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400",
+  warning: "bg-peach-100 text-peach-700 dark:bg-peach-900/40 dark:text-peach-400",
   veg: "bg-green-50 text-green-700 border border-green-600",
   nonveg: "bg-red-50 text-red-700 border border-red-600",
   vegan: "bg-emerald-50 text-emerald-700 border border-emerald-600",

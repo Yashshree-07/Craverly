@@ -176,7 +176,7 @@ export default function Checkout() {
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4 min-w-0">
           {!isAuthenticated && (
-            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900 rounded-lg p-3 text-sm text-amber-800 dark:text-amber-400">
+            <div className="bg-peach-50 dark:bg-peach-900/10 border border-peach-200 dark:border-peach-900 rounded-lg p-3 text-sm text-peach-800 dark:text-peach-400">
               You're checking out as a guest.{" "}
               <Link
                 to="/login"

@@ -47,7 +47,7 @@ export default function OrderTracking() {
       </Link>
 
       {!isAuthenticated && (
-        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900 rounded-lg p-3 text-sm text-amber-800 dark:text-amber-400 mb-4">
+        <div className="bg-peach-50 dark:bg-peach-900/10 border border-peach-200 dark:border-peach-900 rounded-lg p-3 text-sm text-peach-800 dark:text-peach-400 mb-4">
           You're viewing this order as a guest.{" "}
           <Link
             to="/login"
