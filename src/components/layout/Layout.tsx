@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { ChatWidget } from "../chat/ChatWidget";
 import { Toaster } from "sonner";
 
 export default function Layout() {
@@ -32,6 +33,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <ChatWidget />
       <Toaster position="top-center" richColors />
     </div>
   );

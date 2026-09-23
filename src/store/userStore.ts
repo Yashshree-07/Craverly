@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { User } from "../types/user";
 import type { Address } from "../types/order";
+import { isSupabaseEnabled } from "../lib/supabaseClient";
+import { updateProfile } from "../lib/authService";
 
 interface UserState {
   user: User | null;
@@ -9,6 +11,7 @@ interface UserState {
   login: (user: User) => void;
   logout: () => void;
   toggleFavoriteRestaurant: (restaurantId: string) => void;
+  toggleFavoriteMenuItem: (menuItemId: string) => void;
   addAddress: (address: Omit<Address, "id">) => void;
   removeAddress: (addressId: string) => void;
   setDefaultAddress: (addressId: string) => void;
@@ -33,7 +36,23 @@ export const useUserStore = create<UserState>()(
           ? user.favoriteRestaurantIds.filter((id) => id !== restaurantId)
           : [...user.favoriteRestaurantIds, restaurantId];
 
-        set({ user: { ...user, favoriteRestaurantIds: updatedFavorites } });
+        const nextUser = { ...user, favoriteRestaurantIds: updatedFavorites };
+        set({ user: nextUser });
+        if (isSupabaseEnabled) void updateProfile(nextUser);
+      },
+
+      toggleFavoriteMenuItem: (menuItemId) => {
+        const user = get().user;
+        if (!user) return;
+
+        const isFavorite = user.favoriteMenuItemIds.includes(menuItemId);
+        const updatedFavorites = isFavorite
+          ? user.favoriteMenuItemIds.filter((id) => id !== menuItemId)
+          : [...user.favoriteMenuItemIds, menuItemId];
+
+        const nextUser = { ...user, favoriteMenuItemIds: updatedFavorites };
+        set({ user: nextUser });
+        if (isSupabaseEnabled) void updateProfile(nextUser);
       },
 
       addAddress: (address) => {
@@ -51,34 +70,36 @@ export const useUserStore = create<UserState>()(
           ? [{ ...newAddress, isDefault: true }]
           : [...user.addresses, newAddress];
 
-        set({ user: { ...user, addresses: updatedAddresses } });
+        const nextUser = { ...user, addresses: updatedAddresses };
+        set({ user: nextUser });
+        if (isSupabaseEnabled) void updateProfile(nextUser);
       },
 
       removeAddress: (addressId) => {
         const user = get().user;
         if (!user) return;
 
-        set({
-          user: {
-            ...user,
-            addresses: user.addresses.filter((a) => a.id !== addressId),
-          },
-        });
+        const nextUser = {
+          ...user,
+          addresses: user.addresses.filter((a) => a.id !== addressId),
+        };
+        set({ user: nextUser });
+        if (isSupabaseEnabled) void updateProfile(nextUser);
       },
 
       setDefaultAddress: (addressId) => {
         const user = get().user;
         if (!user) return;
 
-        set({
-          user: {
-            ...user,
-            addresses: user.addresses.map((a) => ({
-              ...a,
-              isDefault: a.id === addressId,
-            })),
-          },
-        });
+        const nextUser = {
+          ...user,
+          addresses: user.addresses.map((a) => ({
+            ...a,
+            isDefault: a.id === addressId,
+          })),
+        };
+        set({ user: nextUser });
+        if (isSupabaseEnabled) void updateProfile(nextUser);
       },
     }),
     { name: "craverly-user" }

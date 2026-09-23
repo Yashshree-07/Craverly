@@ -58,6 +58,7 @@ export interface Order {
   statusHistory: OrderStatusEvent[];
   placedAt: string;
   estimatedDeliveryTime: string;
+  scheduledDeliveryTime?: string;
   deliveryPartner?: {
     name: string;
     phone: string;

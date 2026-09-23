@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../components/auth/AuthLayout";
+import { GoogleAuthButton } from "../components/auth/GoogleAuthButton";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
 import { useUserStore } from "../store/userStore";
-import { signupUser } from "../lib/mockAuth";
+import { signupWithEmail, isGoogleAuthEnabled } from "../lib/authService";
+import { isSupabaseEnabled } from "../lib/supabaseClient";
 import { toast } from "sonner";
 
 const signupSchema = z
@@ -35,22 +37,19 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupFormData>({ resolver: zodResolver(signupSchema) });
 
-  const onSubmit = (data: SignupFormData) => {
+  const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
+    const result = await signupWithEmail(data.name, data.email, data.password);
 
-    setTimeout(() => {
-      const result = signupUser(data.name, data.email, data.password);
+    if (result.success && result.user) {
+      login(result.user);
+      toast.success("Account created! Welcome to Craverly.");
+      navigate("/");
+    } else {
+      toast.error(result.message);
+    }
 
-      if (result.success && result.user) {
-        login(result.user);
-        toast.success("Account created! Welcome to Craverly.");
-        navigate("/");
-      } else {
-        toast.error(result.message);
-      }
-
-      setIsSubmitting(false);
-    }, 600);
+    setIsSubmitting(false);
   };
 
   return (
@@ -95,6 +94,18 @@ export default function Signup() {
           Create account
         </Button>
       </form>
+
+      {isGoogleAuthEnabled() && (
+        <div className="mt-4">
+          <GoogleAuthButton />
+        </div>
+      )}
+
+      {!isSupabaseEnabled && (
+        <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-950 rounded-lg text-xs text-gray-500">
+          Demo tip: accounts only exist in this browser — clearing storage signs you out.
+        </div>
+      )}
     </AuthLayout>
   );
 }

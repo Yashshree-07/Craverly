@@ -12,6 +12,11 @@ export interface MenuItemCustomization {
   maxSelect: number;
 }
 
+export interface MenuItemNutrition {
+  calories?: number;
+  allergens: string[];
+}
+
 export interface MenuItem {
   id: string;
   restaurantId: string;
@@ -26,6 +31,7 @@ export interface MenuItem {
   customizations?: MenuItemCustomization[];
   rating?: number;
   ratingCount?: number;
+  nutrition?: MenuItemNutrition;
 }
 
 export interface Review {

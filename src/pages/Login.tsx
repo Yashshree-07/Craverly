@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthLayout } from "../components/auth/AuthLayout";
+import { GoogleAuthButton } from "../components/auth/GoogleAuthButton";
 import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
 import { useUserStore } from "../store/userStore";
-import { loginUser } from "../lib/mockAuth";
+import { loginWithEmail, isGoogleAuthEnabled } from "../lib/authService";
+import { isSupabaseEnabled } from "../lib/supabaseClient";
 import { toast } from "sonner";
 
 const loginSchema = z.object({
@@ -29,26 +31,20 @@ export default function Login() {
     formState: { errors },
   } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
+    const result = await loginWithEmail(data.email, data.password);
 
-    // Simulate network delay for realism
-    setTimeout(() => {
-      const result = loginUser(data.email, data.password);
+    if (result.success && result.user) {
+      login(result.user);
+      toast.success(`Welcome back, ${result.user.name.split(" ")[0]}!`);
+      const redirectTo = (location.state as { from?: string })?.from ?? "/";
+      navigate(redirectTo);
+    } else {
+      toast.error(result.message);
+    }
 
-      if (result.success && result.user) {
-        login(result.user);
-        toast.success(`Welcome back, ${result.user.name.split(" ")[0]}!`);
-
-        // Redirect back to wherever they came from (e.g. checkout), default home
-        const redirectTo = (location.state as { from?: string })?.from ?? "/";
-        navigate(redirectTo);
-      } else {
-        toast.error(result.message);
-      }
-
-      setIsSubmitting(false);
-    }, 600);
+    setIsSubmitting(false);
   };
 
   return (
@@ -80,9 +76,16 @@ export default function Login() {
         </Button>
       </form>
 
+      {isGoogleAuthEnabled() && (
+        <div className="mt-4">
+          <GoogleAuthButton />
+        </div>
+      )}
+
       <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-950 rounded-lg text-xs text-gray-500">
-        Demo tip: sign up first to create an account, then log back in with the same
-        credentials — there's no real backend, so accounts only exist in this browser.
+        {isSupabaseEnabled
+          ? "Demo tip: sign up first to create an account, then log back in. Your account and orders live in Supabase."
+          : "Demo tip: sign up first to create an account, then log back in with the same credentials — there's no real backend, so accounts only exist in this browser."}
       </div>
     </AuthLayout>
   );

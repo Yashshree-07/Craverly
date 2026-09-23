@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { X, Minus, Plus, ShoppingBag } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { formatPrice, calculateCartTotals } from "../../lib/utils";
 import { Button } from "../common/Button";
@@ -10,7 +10,7 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, updateQuantity, removeItem, getSubtotal } = useCartStore();
+  const { items, updateQuantity, removeItem, clearCart, getSubtotal } = useCartStore();
   const subtotal = getSubtotal();
   const { taxAmount, deliveryFee, packagingFee, totalAmount } =
     calculateCartTotals(subtotal);
@@ -35,12 +35,24 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <h2 className="text-lg font-bold flex items-center gap-2">
             <ShoppingBag size={20} /> Your Cart
           </h2>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-1">
+            {items.length > 0 && (
+              <button
+                onClick={clearCart}
+                className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                aria-label="Clear cart"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label="Close cart"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {items.length === 0 ? (

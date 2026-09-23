@@ -5,7 +5,7 @@ import type { Order } from "../../types/order";
 
 // Fix default marker icons not loading in bundlers like Vite
 const restaurantIcon = new L.DivIcon({
-  html: `<div style="background:#e23744;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)">🍽️</div>`,
+  html: `<div style="background:#43368f;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)">🍽️</div>`,
   className: "",
   iconSize: [28, 28],
   iconAnchor: [14, 14],
@@ -84,7 +84,7 @@ export function DeliveryMap({ order }: DeliveryMapProps) {
 
         <Polyline
           positions={[restaurantPos, homePos]}
-          pathOptions={{ color: "#e23744", dashArray: "6, 8", weight: 2 }}
+          pathOptions={{ color: "#43368f", dashArray: "6, 8", weight: 2 }}
         />
 
         <Marker position={restaurantPos} icon={restaurantIcon}>

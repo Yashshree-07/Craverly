@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ShoppingCart, User, X, Moon, Sun, Menu } from "lucide-react";
+import { ShoppingCart, User, X, Moon, Sun, Menu, Heart } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { useUserStore } from "../../store/userStore";
 import { useFilterStore } from "../../store/filterStore";
@@ -30,8 +30,8 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
     setMobileMenuOpen(false);
   };
 
-  const searchInputClassName =
-    "rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-0";
+  const searchPillClassName =
+    "flex items-center rounded-full border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 pl-3 pr-1";
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 shadow-sm">
@@ -47,11 +47,18 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
             value={desktopSearch}
             onChange={setDesktopSearch}
             onSubmit={handleSearchSubmit}
-            className="hidden md:flex flex-1 max-w-md mx-4"
-            inputClassName={searchInputClassName}
+            className={`hidden md:flex flex-1 max-w-md mx-4 ${searchPillClassName}`}
           />
 
           <div className="hidden md:flex items-center gap-4">
+            <Link
+              to="/favorites"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Favorites"
+            >
+              <Heart size={20} />
+            </Link>
+
             <button
               onClick={onToggleDarkMode}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -99,7 +106,7 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
               value={mobileSearch}
               onChange={setMobileSearch}
               onSubmit={handleSearchSubmit}
-              inputClassName={searchInputClassName}
+              className={searchPillClassName}
             />
 
             <div className="flex items-center justify-around pt-2 border-t border-gray-200 dark:border-gray-800">
@@ -126,6 +133,15 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
                   </span>
                 )}
               </button>
+
+              <Link
+                to="/favorites"
+                className="flex flex-col items-center gap-1 p-2 text-xs"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Heart size={20} />
+                Favorites
+              </Link>
 
               <Link
                 to={isAuthenticated ? "/profile" : "/login"}

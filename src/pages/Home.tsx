@@ -1,8 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { HeroSearch } from "../components/restaurant/HeroSearch";
 import { CategoryTiles } from "../components/restaurant/CategoryTiles";
 import { RestaurantSection } from "../components/restaurant/RestaurantSection";
-import { mockRestaurants } from "../data/mockRestaurants";
+import { OfferCarousel } from "../components/restaurant/OfferCarousel";
+import { ImpactTracker } from "../components/restaurant/ImpactTracker";
+import { WeatherPicks } from "../components/restaurant/WeatherPicks";
+import { PersonalizedPicks } from "../components/restaurant/PersonalizedPicks";
+import { mockRestaurants, allCuisines } from "../data/mockRestaurants";
 import { useLocationStore } from "../store/locationStore";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 
@@ -48,11 +54,34 @@ export default function Home() {
     <div>
       <HeroSearch />
 
+      <OfferCarousel />
+
+      <ImpactTracker />
+
+      <WeatherPicks />
+
+      <PersonalizedPicks />
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           What's on your mind?
         </h2>
         <CategoryTiles />
+
+        <div className="mt-8 flex flex-col items-center">
+          <Link
+            to="/restaurants"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm transition-colors group"
+          >
+            Browse all restaurants
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+          </Link>
+          <p className="text-xs text-gray-500 mt-2">
+            {mockRestaurants.length} restaurants across{" "}
+            {allCuisines.length}
+            cuisines
+          </p>
+        </div>
       </div>
 
       {recentlyViewed.length > 0 && (

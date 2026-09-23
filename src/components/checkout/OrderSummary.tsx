@@ -48,16 +48,19 @@ export function OrderSummary({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 min-w-0">
       <h3 className="font-semibold mb-3">Order summary</h3>
 
       <div className="space-y-2 mb-4">
         {items.map((item) => (
-          <div key={item.menuItemId} className="flex justify-between text-sm">
-            <span className="text-gray-600 dark:text-gray-400">
+          <div
+            key={item.menuItemId}
+            className="flex justify-between gap-3 text-sm"
+          >
+            <span className="text-gray-600 dark:text-gray-400 min-w-0 truncate">
               {item.quantity} × {item.name}
             </span>
-            <span className="font-medium">
+            <span className="font-medium shrink-0">
               {formatPrice(item.price * item.quantity)}
             </span>
           </div>
@@ -76,20 +79,37 @@ export function OrderSummary({
           </button>
         </div>
       ) : (
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={couponInput}
-            onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-            placeholder="Enter coupon code"
-            className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-          <button
-            onClick={handleApply}
-            className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90"
+        <div className="mb-4">
+          <label
+            htmlFor="coupon-input"
+            className="block text-xs font-medium text-gray-500 mb-1.5"
           >
-            Apply
-          </button>
+            Coupon code <span className="text-gray-400">(optional)</span>
+          </label>
+          <div className="flex items-center rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 focus-within:ring-2 focus-within:ring-primary-500 overflow-hidden">
+            <Tag size={16} className="ml-3 text-gray-400 shrink-0" />
+            <input
+              id="coupon-input"
+              type="text"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleApply();
+                }
+              }}
+              placeholder="Enter coupon code"
+              className="flex-1 min-w-0 px-2 py-2 bg-transparent text-sm focus:outline-none"
+            />
+            <button
+              onClick={handleApply}
+              disabled={!couponInput.trim()}
+              className="shrink-0 px-4 py-2.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Apply
+            </button>
+          </div>
         </div>
       )}
 

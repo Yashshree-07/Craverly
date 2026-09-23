@@ -9,6 +9,7 @@ interface FilterState extends RestaurantFilters {
   setPriceRange: (range: [number, number]) => void;
   setVegType: (vegType: RestaurantFilters["vegType"]) => void;
   setHasOffers: (hasOffers: boolean) => void;
+  setMaxDeliveryTime: (minutes: number | null) => void;
   setSortBy: (sortBy: RestaurantFilters["sortBy"]) => void;
   resetFilters: () => void;
 }
@@ -42,6 +43,7 @@ export const useFilterStore = create<FilterState>((set, get) => ({
   setPriceRange: (priceRange) => set({ priceRange }),
   setVegType: (vegType) => set({ vegType }),
   setHasOffers: (hasOffers) => set({ hasOffers }),
+  setMaxDeliveryTime: (maxDeliveryTime) => set({ maxDeliveryTime }),
   setSortBy: (sortBy) => set({ sortBy }),
 
   resetFilters: () => set({ ...defaultFilters, searchQuery: get().searchQuery }),

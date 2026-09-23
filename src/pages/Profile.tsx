@@ -1,8 +1,9 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
-import { LogOut, MapPin, Heart, Package, Plus } from "lucide-react";
+import { LogOut, MapPin, Heart, Package, Plus, BarChart3 } from "lucide-react";
 import { useUserStore } from "../store/userStore";
 import { useOrderStore } from "../store/orderStore";
+import { logout as logoutRemote } from "../lib/authService";
 import { AddressCard } from "../components/profile/AddressCard";
 import { AddAddressModal } from "../components/checkout/AddAddressModal";
 import { Button } from "../components/common/Button";
@@ -25,6 +26,7 @@ export default function Profile() {
   );
 
   const handleLogout = () => {
+    void logoutRemote();
     logout();
     navigate("/");
   };
@@ -59,16 +61,19 @@ export default function Profile() {
           <p className="text-xs text-gray-500">Orders</p>
         </Link>
 
+        <Link
+          to="/analytics"
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 text-center hover:border-primary-400 transition-colors"
+        >
+          <BarChart3 size={20} className="mx-auto mb-1 text-primary-600" />
+          <p className="text-lg font-bold">Insights</p>
+          <p className="text-xs text-gray-500">Analytics</p>
+        </Link>
+
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 text-center">
           <Heart size={20} className="mx-auto mb-1 text-primary-600" />
           <p className="text-lg font-bold">{favoriteRestaurants.length}</p>
           <p className="text-xs text-gray-500">Favorites</p>
-        </div>
-
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 text-center">
-          <MapPin size={20} className="mx-auto mb-1 text-primary-600" />
-          <p className="text-lg font-bold">{user.addresses.length}</p>
-          <p className="text-xs text-gray-500">Addresses</p>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Store, Utensils, Flame, Clock3, X } from "lucide-react";
+import { Search, Store, Utensils, Flame, Clock3, X, Mic } from "lucide-react";
 import {
   getRestaurantById,
   mockMenuItems,
@@ -8,8 +8,10 @@ import {
 } from "../../data/mockRestaurants";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useRecentSearches } from "../../hooks/useRecentSearches";
+import { useSpeechRecognition } from "../../hooks/useSpeechRecognition";
 import { TRENDING_SEARCHES } from "../../data/locations";
 import { cn } from "../../lib/utils";
+import { toast } from "sonner";
 
 interface SearchAutocompleteProps {
   value: string;
@@ -42,6 +44,16 @@ export function SearchAutocomplete({
   const [isFocused, setIsFocused] = useState(false);
   const debounced = useDebounce(value.trim(), 200);
   const blurTimer = useRef<number | null>(null);
+
+  const {
+    isListening,
+    isSupported: voiceSupported,
+    start: startListening,
+    stop: stopListening,
+  } = useSpeechRecognition((transcript) => {
+    onChange(transcript);
+    runSearch(transcript);
+  });
 
   const restaurantResults = useMemo(() => {
     const q = debounced.toLowerCase();
@@ -92,18 +104,18 @@ export function SearchAutocomplete({
     setIsFocused(false);
   };
 
-  const runSearch = (query: string) => {
+  function runSearch(query: string) {
     const q = query.trim();
     if (!q) return;
     addRecent(q);
     onChange(q);
     onSubmit(q);
     setIsFocused(false);
-  };
+  }
 
   return (
     <div className={cn("relative", className)}>
-      <div className="relative flex items-center">
+      <div className="relative flex flex-1 items-center gap-1.5">
         {showIcon && (
           <Search
             size={18}
@@ -117,8 +129,9 @@ export function SearchAutocomplete({
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
+          aria-label={placeholder}
           className={cn(
-            "w-full py-2.5 pr-8 text-sm text-gray-900 dark:text-gray-100 focus:outline-none",
+            "flex-1 min-w-0 py-2.5 text-sm text-gray-900 dark:text-gray-100 focus:outline-none",
             showIcon ? "pl-10" : "pl-3",
             inputClassName
           )}
@@ -127,12 +140,36 @@ export function SearchAutocomplete({
           <button
             type="button"
             onClick={() => onChange("")}
-            className="absolute right-2.5 p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+            className="shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
             aria-label="Clear search"
           >
             <X size={14} />
           </button>
         )}
+        <button
+          type="button"
+          onClick={() => {
+            if (!voiceSupported) {
+              toast.error("Voice input isn't supported in this browser");
+              return;
+            }
+            if (isListening) {
+              stopListening();
+            } else {
+              startListening();
+            }
+          }}
+          className={cn(
+            "shrink-0 p-1 rounded-full focus:outline-none transition-colors",
+            isListening
+              ? "text-white bg-red-500 animate-pulse"
+              : "text-gray-400 hover:text-primary-600"
+          )}
+          aria-label={isListening ? "Stop voice search" : "Search by voice"}
+          title={isListening ? "Listening..." : "Voice search"}
+        >
+          <Mic size={15} />
+        </button>
       </div>
 
       {showDropdown && (

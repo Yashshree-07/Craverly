@@ -8,13 +8,16 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: "#fff1f0",
-          100: "#ffe3e2",
-          400: "#ef646d",
-          500: "#e23744",   // Zomato-red-ish, tweak as you like
-          600: "#cb202d",
-          700: "#a5171f",
-          900: "#7a1118",
+          50: "#f5f3fb",
+          100: "#e9e6f7",
+          200: "#d2cbed",
+          300: "#b0a6e0",
+          400: "#8a7ccf",
+          500: "#6354b8",
+          600: "#43368f",
+          700: "#2b1f6e",   // deep indigo-violet
+          800: "#251a5c",   // brand base
+          900: "#17103c",
         },
       },
     },

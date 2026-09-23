@@ -8,3 +8,24 @@
 body {
   @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
 }
+
+/* Print styles — show only the invoice when printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-invoice,
+  #print-invoice * {
+    visibility: visible;
+  }
+  #print-invoice {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  body {
+    @apply bg-white text-black;
+  }
+}

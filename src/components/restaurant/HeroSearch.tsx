@@ -19,7 +19,7 @@ export function HeroSearch() {
   const locationLabel = label();
 
   return (
-    <div className="bg-gradient-to-br from-primary-600 to-primary-700 py-16 px-4">
+    <div className="bg-gradient-to-br from-primary-800 via-primary-900 to-black py-16 px-4">
       <div className="max-w-3xl mx-auto text-center">
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
           Craving something delicious?
@@ -38,7 +38,7 @@ export function HeroSearch() {
           <button
             type="button"
             onClick={detect}
-            className="flex items-center gap-2 px-4 py-2.5 text-gray-700 text-sm font-medium border-b sm:border-b-0 sm:border-r border-gray-200 whitespace-nowrap"
+            className="shrink-0 flex items-center gap-2 px-4 py-2.5 text-gray-700 text-sm font-medium border-b sm:border-b-0 sm:border-r border-gray-200 whitespace-nowrap"
             title="Detect my location"
           >
             {isLoading ? (
@@ -67,7 +67,7 @@ export function HeroSearch() {
 
           <button
             type="submit"
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2.5 rounded-full text-sm transition-colors"
+            className="shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2.5 rounded-full text-sm transition-colors"
           >
             Search
           </button>
