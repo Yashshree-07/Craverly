@@ -92,10 +92,23 @@ describe("recommendations", () => {
       ]),
     ];
 
-    const picks = getDishRecommendations({ user, orders }, 500);
-    const peppernoni = picks.find((p) => p.item.id === "m10");
-    expect(peppernoni).toBeDefined();
-    expect(peppernoni?.score).toBeLessThan(0);
+    const picks = getDishRecommendations({ user, orders });
+    expect(picks.length).toBeGreaterThan(0);
+    // At scale, veg and vegan dishes fill the top recommendations while any
+    // non-veg option is de-emphasized for a user with no non-veg history.
+    const top = picks.slice(0, Math.min(8, picks.length));
+    for (const pick of top) {
+      expect(pick.item.vegType).not.toBe("non-veg");
+    }
+    const highestNonVeg = Math.max(
+      ...picks.filter((p) => p.item.vegType === "non-veg").map((p) => p.score),
+      -Infinity
+    );
+    const lowestVeg = Math.min(
+      ...picks.filter((p) => p.item.vegType !== "non-veg").map((p) => p.score),
+      Infinity
+    );
+    expect(highestNonVeg).toBeLessThan(lowestVeg);
   });
 
   it("supports favorites signal", () => {

@@ -31,7 +31,7 @@ const methods: { value: PaymentMethod; label: string; description: string; icon:
 
 export function PaymentMethodSelector({ selected, onSelect }: PaymentMethodSelectorProps) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+    <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
       <h3 className="font-semibold mb-3">Payment method</h3>
 
       <div className="space-y-2">

@@ -39,7 +39,7 @@ export function OrderCard({ order }: OrderCardProps) {
   const isActive = order.status !== "delivered" && order.status !== "cancelled";
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+    <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
       <div className="flex items-start gap-3">
         <img
           src={order.restaurantImage}

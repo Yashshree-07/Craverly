@@ -54,7 +54,7 @@ export function ImpactTracker() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-6">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 md:p-6">
+      <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="grid place-items-center h-11 w-11 rounded-xl bg-primary-50 dark:bg-primary-900/30 text-primary-600 shrink-0">

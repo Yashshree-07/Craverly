@@ -70,7 +70,7 @@ export default function Profile() {
           <p className="text-xs text-gray-500">Analytics</p>
         </Link>
 
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 text-center">
+        <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 text-center">
           <Heart size={20} className="mx-auto mb-1 text-primary-600" />
           <p className="text-lg font-bold">{favoriteRestaurants.length}</p>
           <p className="text-xs text-gray-500">Favorites</p>

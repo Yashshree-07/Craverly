@@ -157,7 +157,7 @@ export function FilterBar() {
 
       {/* Expandable filter panel */}
       {isOpen && (
-        <div className="mt-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-5 space-y-4">
+        <div className="mt-3 bg-lavender-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-5 space-y-4">
           <FilterGroup label="Dietary & quality">
             {(["all", "veg", "non-veg", "vegan"] as const).map((type) => (
               <Chip

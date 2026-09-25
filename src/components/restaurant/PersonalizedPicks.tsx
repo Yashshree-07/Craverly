@@ -56,7 +56,7 @@ export function PersonalizedPicks() {
         {picks.map((pick) => (
           <div
             key={pick.item.id}
-            className="shrink-0 w-56 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden snap-start"
+            className="shrink-0 w-56 bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden snap-start"
           >
             <div className="relative h-32">
               {pick.item.image ? (

@@ -21,7 +21,7 @@ export function HeroSearch() {
   return (
     <div className="bg-gradient-to-br from-primary-800 via-primary-900 to-black py-16 px-4">
       <div className="max-w-3xl mx-auto text-center">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
+        <h1 className="text-3xl md:text-5xl font-bold text-peach-300 mb-3">
           Craving something delicious?
         </h1>
         <p className="text-primary-100 mb-8">

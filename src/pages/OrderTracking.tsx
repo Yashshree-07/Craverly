@@ -95,7 +95,7 @@ export default function OrderTracking() {
       )}
 
       {order.deliveryPartner && !isDelivered && (
-        <div className="flex items-center justify-between bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
+        <div className="flex items-center justify-between bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-400 flex items-center justify-center font-semibold">
               {order.deliveryPartner.name.charAt(0)}
@@ -119,7 +119,7 @@ export default function OrderTracking() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
+      <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
         <OrderStatusTimeline currentStatus={order.status} />
       </div>
 
@@ -208,7 +208,7 @@ export default function OrderTracking() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+      <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
         <h3 className="font-semibold mb-2">Delivering to</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400">
           {order.deliveryAddress.label} — {order.deliveryAddress.fullAddress}

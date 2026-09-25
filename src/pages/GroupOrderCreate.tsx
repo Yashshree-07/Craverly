@@ -68,7 +68,7 @@ export default function GroupOrderCreate() {
             key={restaurant.id}
             onClick={() => handleCreate(restaurant.id)}
             disabled={creating !== null}
-            className="text-left bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:border-primary-400 transition-colors disabled:opacity-60"
+            className="text-left bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:border-primary-400 transition-colors disabled:opacity-60"
           >
             <img
               src={restaurant.image}

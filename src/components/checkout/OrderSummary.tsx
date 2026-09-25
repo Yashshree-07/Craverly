@@ -48,7 +48,7 @@ export function OrderSummary({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 min-w-0">
+    <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 min-w-0">
       <h3 className="font-semibold mb-3">Order summary</h3>
 
       <div className="space-y-2 mb-4">

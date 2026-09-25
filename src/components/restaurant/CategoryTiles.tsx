@@ -27,7 +27,7 @@ export function CategoryTiles() {
         <button
           key={cat.name}
           onClick={() => handleCategoryClick(cat.name)}
-          className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-500 hover:shadow-md transition-all bg-white dark:bg-gray-900"
+          className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-peach-400 hover:shadow-md transition-all bg-lavender-50 dark:bg-gray-900"
         >
           <span className="text-3xl">{cat.emoji}</span>
           <span className="text-xs font-medium text-center text-gray-700 dark:text-gray-300">

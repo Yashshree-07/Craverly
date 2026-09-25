@@ -1,11 +1,13 @@
 import {
   mockRestaurants,
+  curatedRestaurants,
   mockMenuItems,
   getRestaurantById,
 } from "../data/mockRestaurants";
 import { mockCoupons } from "../data/mockCoupons";
 import { useOrderStore } from "../store/orderStore";
 import { useCartStore } from "../store/cartStore";
+import { estimateDeliveryEta, formatEtaRange } from "./eta";
 import type { CartItem } from "../types/order";
 
 export interface ChatAction {
@@ -120,9 +122,7 @@ function findRestaurant(query: string) {
 }
 
 function formatRestaurant(r: (typeof mockRestaurants)[number]): string {
-  return `${r.name} (${r.cuisines.join(", ")}) • ₹${r.costForTwo} for two • ${
-    r.deliveryTimeMinutes
-  } min • ${r.rating}★`;
+  return `${r.name} (${r.cuisines.join(", ")}) • ₹${r.costForTwo} for two • ${formatEtaRange(estimateDeliveryEta(r))} • ${r.rating}★`;
 }
 
 export async function getChatReply(input: string): Promise<ChatReply> {
@@ -350,16 +350,20 @@ export async function getChatReply(input: string): Promise<ChatReply> {
   const craving = CRAVING_MAP.find((c) => lower.includes(c.key));
   if (/recommend|what should i eat|suggest|craving|hungry|something (spicy|sweet|healthy)/.test(normalized) || craving) {
     const wantVeg = matchVegType(normalized);
-    const matches = mockRestaurants
+    // Picks are drawn from onboarded partner venues curated by Craverly.
+    const matches = curatedRestaurants
       .filter((r) => !craving || craving.cuisines.some((c) => r.cuisines.includes(c)))
       .filter((r) => !wantVeg || (wantVeg === "vegan" ? r.vegOnly : wantVeg === "non-veg" ? !r.vegOnly : r.vegOnly))
-      .sort((a, b) => a.deliveryTimeMinutes - b.deliveryTimeMinutes)
+      .sort(
+        (a, b) =>
+          estimateDeliveryEta(a).minutes - estimateDeliveryEta(b).minutes
+      )
       .slice(0, 3);
 
     if (matches.length > 0) {
       const prefix = craving ? `Here are some ${craving.label} picks for you:\n` : "Here's what I'd recommend:\n";
       const list = matches
-        .map((r) => `${r.name} (${r.rating}★, ${r.deliveryTimeMinutes} min, ${r.cuisines.join(", ")})`)
+        .map((r) => `${r.name} (${r.rating}★, ${formatEtaRange(estimateDeliveryEta(r))}, ${r.cuisines.join(", ")})`)
         .join("\n");
       return {
         text: `${prefix}${list}`,
@@ -374,10 +378,13 @@ export async function getChatReply(input: string): Promise<ChatReply> {
 
   // Fast delivery
   if (/(fast|quickest|fastest delivery)/.test(normalized)) {
-    const list = [...mockRestaurants]
-      .sort((a, b) => a.deliveryTimeMinutes - b.deliveryTimeMinutes)
+    const list = [...curatedRestaurants]
+      .sort(
+        (a, b) =>
+          estimateDeliveryEta(a).minutes - estimateDeliveryEta(b).minutes
+      )
       .slice(0, 3)
-      .map((r) => `${r.name} — ${r.deliveryTimeMinutes} min (₹${r.costForTwo} for two)`)
+      .map((r) => `${r.name} — ${formatEtaRange(estimateDeliveryEta(r))} (₹${r.costForTwo} for two)`)
       .join("\n");
     return {
       text: `Fastest on the block:\n${list}`,
@@ -412,7 +419,7 @@ export async function getChatReply(input: string): Promise<ChatReply> {
 
   // Top rated
   if (/(top rated|best restaurants|highest rated|top restaurants)/.test(normalized)) {
-    const list = [...mockRestaurants]
+    const list = [...curatedRestaurants]
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 3)
       .map((r) => formatRestaurant(r))

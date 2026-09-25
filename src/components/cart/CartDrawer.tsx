@@ -33,7 +33,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
           <h2 className="text-lg font-bold flex items-center gap-2">
-            <ShoppingBag size={20} /> Your Cart
+            <ShoppingBag size={20} className="text-peach-500" /> Your Cart
           </h2>
           <div className="flex items-center gap-1">
             {items.length > 0 && (
@@ -144,7 +144,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
 
               <Link to="/checkout" onClick={onClose}>
-                <Button className="w-full mt-2" size="lg">
+                <Button className="w-full mt-2" size="lg" variant="peach">
                   Proceed to Checkout
                 </Button>
               </Link>

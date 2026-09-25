@@ -225,6 +225,7 @@ export default function Checkout() {
           <Button
             className="w-full"
             size="lg"
+            variant="peach"
             disabled={!canPlaceOrder}
             isLoading={isPlacing}
             onClick={handlePlaceOrder}
@@ -257,7 +258,7 @@ function GuestDetailsForm({
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+    <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
       <h3 className="font-semibold flex items-center gap-2 mb-3">
         <UserRound size={18} /> Guest delivery details
       </h3>
@@ -345,7 +346,7 @@ function DeliveryTimeSelector({
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+    <div className="bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
       <h3 className="font-semibold flex items-center gap-2 mb-3">
         <CalendarClock size={18} /> Delivery time
       </h3>

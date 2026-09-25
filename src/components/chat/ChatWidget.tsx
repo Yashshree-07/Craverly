@@ -189,7 +189,7 @@ export function ChatWidget() {
                           key={chip}
                           onClick={() => void handleSend(chip)}
                           disabled={isTyping}
-                          className="px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-xs font-medium hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors disabled:opacity-50"
+                          className="px-3 py-1.5 rounded-full bg-peach-50 dark:bg-peach-900/20 border border-peach-200 dark:border-peach-800 text-peach-700 dark:text-peach-300 text-xs font-medium hover:bg-peach-100 dark:hover:bg-peach-900/40 transition-colors disabled:opacity-50"
                         >
                           {chip}
                         </button>

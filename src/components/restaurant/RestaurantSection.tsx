@@ -3,6 +3,7 @@ import { Star, Clock } from "lucide-react";
 import type { Restaurant } from "../../types/restaurant";
 import { RestaurantCard } from "./RestaurantCard";
 import { RestaurantCardSkeleton } from "../common/Skeleton";
+import { estimateDeliveryEta, formatEtaRange } from "../../lib/eta";
 import { cn } from "../../lib/utils";
 
 interface RestaurantSectionProps {
@@ -45,7 +46,7 @@ export function RestaurantSection({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
 
-              <span className="absolute top-3 left-3 text-[11px] font-semibold text-primary-700 bg-white/90 backdrop-blur px-2.5 py-1 rounded-full uppercase tracking-wide">
+              <span className="absolute top-3 left-3 text-[11px] font-semibold text-white bg-peach-500 backdrop-blur px-2.5 py-1 rounded-full uppercase tracking-wide">
                 Featured
               </span>
 
@@ -63,7 +64,7 @@ export function RestaurantSection({
                   </span>
                   <span className="flex items-center gap-1 text-white/90">
                     <Clock size={13} />
-                    {featured.deliveryTimeMinutes} min
+                    {formatEtaRange(estimateDeliveryEta(featured))}
                   </span>
                   <span className="text-white/90">₹{featured.costForTwo} for two</span>
                   <span

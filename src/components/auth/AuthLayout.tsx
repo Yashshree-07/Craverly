@@ -30,7 +30,7 @@ export function AuthLayout({
           <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+        <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
           {children}
         </div>
 

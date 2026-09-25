@@ -4,13 +4,16 @@ import { ArrowRight } from "lucide-react";
 import { HeroSearch } from "../components/restaurant/HeroSearch";
 import { CategoryTiles } from "../components/restaurant/CategoryTiles";
 import { RestaurantSection } from "../components/restaurant/RestaurantSection";
+import { FastestDelivery } from "../components/restaurant/FastestDelivery";
 import { OfferCarousel } from "../components/restaurant/OfferCarousel";
 import { ImpactTracker } from "../components/restaurant/ImpactTracker";
 import { WeatherPicks } from "../components/restaurant/WeatherPicks";
 import { PersonalizedPicks } from "../components/restaurant/PersonalizedPicks";
-import { mockRestaurants, allCuisines } from "../data/mockRestaurants";
+import { LiveRestaurants } from "../components/restaurant/LiveRestaurants";
+import { mockRestaurants } from "../data/mockRestaurants";
 import { useLocationStore } from "../store/locationStore";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
+import { estimateDeliveryEta } from "../lib/eta";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,17 +26,28 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const topRated = [...mockRestaurants]
+  // Every home section is scoped to the selected city so switching location
+  // (Chennai, Delhi, Hyderabad, ...) swaps the whole homepage, not just the
+  // "Live near you" strip.
+  const cityRestaurants = useMemo(
+    () => mockRestaurants.filter((r) => r.city === city),
+    [city]
+  );
+
+  const topRated = [...cityRestaurants]
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 4);
 
-  const promoted = mockRestaurants.filter((r) => r.isPromoted);
+  const promoted = cityRestaurants.filter((r) => r.isPromoted);
 
-  const fastDelivery = [...mockRestaurants]
-    .sort((a, b) => a.deliveryTimeMinutes - b.deliveryTimeMinutes)
+  const fastDelivery = [...cityRestaurants]
+    .sort(
+      (a, b) =>
+        estimateDeliveryEta(a).minutes - estimateDeliveryEta(b).minutes
+    )
     .slice(0, 4);
 
-  // Restaurants in the user's selected area (fallback: city, then all)
+  // Restaurants in the user's selected area (fallback: city)
   const popularInArea = useMemo(() => {
     const areaMatches = area
       ? mockRestaurants.filter((r) => r.area === area && r.city === city)
@@ -53,6 +67,10 @@ export default function Home() {
   return (
     <div>
       <HeroSearch />
+
+      <FastestDelivery restaurants={cityRestaurants} />
+
+      <LiveRestaurants />
 
       <OfferCarousel />
 
@@ -74,12 +92,10 @@ export default function Home() {
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm transition-colors group"
           >
             Browse all restaurants
-            <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight size={16} className="text-peach-300 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <p className="text-xs text-gray-500 mt-2">
-            {mockRestaurants.length} restaurants across{" "}
-            {allCuisines.length}
-            cuisines
+            {cityRestaurants.length} restaurants in {city}
           </p>
         </div>
       </div>

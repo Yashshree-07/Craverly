@@ -20,8 +20,10 @@ import { ReviewsList } from "../components/restaurant/ReviewsList";
 import { VegIndicator } from "../components/common/Badge";
 import { useUserStore } from "../store/userStore";
 import { useReviewStore } from "../store/reviewStore";
+import { useLocationStore } from "../store/locationStore";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 import { ALLERGENS, CALORIE_FILTERS, type Allergen } from "../lib/allergens";
+import { estimateDeliveryEta, formatEtaRange, deliveryDistanceKm } from "../lib/eta";
 import { cn } from "../lib/utils";
 import { toast } from "sonner";
 
@@ -42,6 +44,15 @@ export default function RestaurantDetail() {
   );
 
   const { user, isAuthenticated, toggleFavoriteRestaurant } = useUserStore();
+  const { latitude, longitude } = useLocationStore();
+  const distance = useMemo(
+    () => (restaurant ? deliveryDistanceKm(restaurant, { latitude, longitude }) : 0),
+    [latitude, longitude, restaurant]
+  );
+  const eta = useMemo(
+    () => (restaurant ? estimateDeliveryEta(restaurant, { distanceKm: distance }) : undefined),
+    [restaurant, distance]
+  );
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(
     new Set()
@@ -182,7 +193,7 @@ export default function RestaurantDetail() {
 
       <div className="max-w-3xl mx-auto px-4">
         {/* Info card */}
-        <div className="bg-white dark:bg-gray-950 -mt-10 relative rounded-t-2xl p-5 shadow-lg">
+        <div className="bg-lavender-50 dark:bg-gray-950 -mt-10 relative rounded-t-2xl p-5 shadow-lg">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -229,8 +240,9 @@ export default function RestaurantDetail() {
 
           <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
             <span className="flex items-center gap-1">
-              <Clock size={14} /> {restaurant.deliveryTimeMinutes} min
+              <Clock size={14} /> {eta ? formatEtaRange(eta) : `${restaurant.deliveryTimeMinutes} min`}
             </span>
+            <span>{distance.toFixed(1)} km</span>
             <span>₹{restaurant.costForTwo} for two</span>
             <span
               className={cn(
@@ -433,7 +445,7 @@ export default function RestaurantDetail() {
               {recommendations.map(({ item, restaurantName }) => (
                 <div
                   key={item.id}
-                  className="shrink-0 w-44 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden"
+                  className="shrink-0 w-44 rounded-lg border border-gray-200 dark:border-gray-800 bg-lavender-50 dark:bg-gray-950 overflow-hidden"
                 >
                   {item.image && (
                     <img

@@ -146,7 +146,7 @@ export default function Analytics() {
 
       <div className="grid md:grid-cols-2 gap-4 mb-4">
         {/* Orders over time */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+        <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Orders per day
           </h2>
@@ -176,7 +176,7 @@ export default function Analytics() {
         </div>
 
         {/* Spend by restaurant */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+        <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Spend by restaurant
           </h2>
@@ -203,7 +203,7 @@ export default function Analytics() {
         </div>
 
         {/* Payment methods */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+        <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Payment methods
           </h2>
@@ -229,7 +229,7 @@ export default function Analytics() {
         </div>
 
         {/* Order status breakdown */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+        <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Order status
           </h2>
@@ -265,7 +265,7 @@ function StatCard({
   value: string;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+    <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
       <div className="flex items-center gap-2 text-primary-600 mb-2">{icon}</div>
       <p className="text-lg font-bold text-gray-900 dark:text-gray-100 truncate">
         {value}

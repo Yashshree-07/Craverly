@@ -1,5 +1,7 @@
 import type { Restaurant, MenuItem, Review } from "../types/restaurant";
-export const mockRestaurants: Restaurant[] = [
+import { generatedRestaurants, generatedMenuItems, generatedReviews } from "./generatedDataset";
+import { getLiveRestaurant, getLiveMenu } from "./liveCatalog";
+export const curatedRestaurants: Restaurant[] = [
   {
     id: "r1",
     name: "Spice Symphony",
@@ -686,6 +688,11 @@ export const mockRestaurants: Restaurant[] = [
     latitude: 13.0311,
     longitude: 80.2650,
   },
+];
+
+export const mockRestaurants: Restaurant[] = [
+  ...curatedRestaurants,
+  ...generatedRestaurants,
 ];
 
 export const mockMenuItems: MenuItem[] = [
@@ -2190,6 +2197,7 @@ export const mockMenuItems: MenuItem[] = [
     isAvailable: true,
     nutrition: { calories: 40, allergens: [] },
   },
+  ...generatedMenuItems,
 ];
 
 export const mockReviews: Review[] = [
@@ -2227,11 +2235,16 @@ export const mockReviews: Review[] = [
     createdAt: "2026-09-15T12:00:00Z",
     helpfulCount: 31,
   },
+  ...generatedReviews,
 ];
 
 // Helper: get menu items for a restaurant
-export const getMenuByRestaurantId = (restaurantId: string): MenuItem[] =>
-  mockMenuItems.filter((item) => item.restaurantId === restaurantId);
+export const getMenuByRestaurantId = (restaurantId: string): MenuItem[] => {
+  const liveMenu = getLiveMenu(restaurantId);
+  return liveMenu.length > 0
+    ? liveMenu
+    : mockMenuItems.filter((item) => item.restaurantId === restaurantId);
+};
 
 // Helper: get reviews for a restaurant
 export const getReviewsByRestaurantId = (restaurantId: string): Review[] =>
@@ -2239,7 +2252,7 @@ export const getReviewsByRestaurantId = (restaurantId: string): Review[] =>
 
 // Helper: get single restaurant
 export const getRestaurantById = (id: string): Restaurant | undefined =>
-  mockRestaurants.find((r) => r.id === id);
+  getLiveRestaurant(id) ?? mockRestaurants.find((r) => r.id === id);
 
 // Unique cuisines for filter chips
 export const allCuisines = Array.from(

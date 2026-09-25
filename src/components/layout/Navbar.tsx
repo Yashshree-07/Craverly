@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ShoppingCart, User, X, Moon, Sun, Menu, Heart } from "lucide-react";
+import { ShoppingCart, User, X, Moon, Sun, Menu, Heart, Flame } from "lucide-react";
 import { useCartStore } from "../../store/cartStore";
 import { useUserStore } from "../../store/userStore";
 import { useFilterStore } from "../../store/filterStore";
@@ -38,6 +38,7 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-1 shrink-0">
+            <Flame size={22} className="text-peach-500 fill-peach-500" />
             <span className="text-2xl font-bold text-primary-600">Craverly</span>
           </Link>
 
@@ -74,7 +75,7 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
             >
               <ShoppingCart size={20} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-peach-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
@@ -128,7 +129,7 @@ export default function Navbar({ isDarkMode, onToggleDarkMode }: NavbarProps) {
                 <ShoppingCart size={20} />
                 Cart
                 {totalItems > 0 && (
-                  <span className="absolute top-0 right-4 bg-primary-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute top-0 right-4 bg-peach-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}

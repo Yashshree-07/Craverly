@@ -9,6 +9,7 @@ import {
 import { useDebounce } from "../../hooks/useDebounce";
 import { useRecentSearches } from "../../hooks/useRecentSearches";
 import { useSpeechRecognition } from "../../hooks/useSpeechRecognition";
+import { useLocationStore } from "../../store/locationStore";
 import { TRENDING_SEARCHES } from "../../data/locations";
 import { cn } from "../../lib/utils";
 import { toast } from "sonner";
@@ -41,6 +42,7 @@ export function SearchAutocomplete({
 }: SearchAutocompleteProps) {
   const navigate = useNavigate();
   const { recent, addRecent, removeRecent, clearRecent } = useRecentSearches();
+  const { city } = useLocationStore();
   const [isFocused, setIsFocused] = useState(false);
   const debounced = useDebounce(value.trim(), 200);
   const blurTimer = useRef<number | null>(null);
@@ -59,13 +61,14 @@ export function SearchAutocomplete({
     const q = debounced.toLowerCase();
     if (!q) return [];
     return mockRestaurants
+      .filter((r) => r.city === city)
       .filter(
         (r) =>
           r.name.toLowerCase().includes(q) ||
           r.cuisines.some((c) => c.toLowerCase().includes(q))
       )
       .slice(0, 4);
-  }, [debounced]);
+  }, [debounced, city]);
 
   const dishResults = useMemo<DishResult[]>(() => {
     const q = debounced.toLowerCase();
@@ -82,9 +85,12 @@ export function SearchAutocomplete({
         restaurantId: m.restaurantId,
         restaurantName: getRestaurantById(m.restaurantId)?.name ?? "",
       }))
-      .filter((d) => d.restaurantName)
+      .filter((d) => {
+        const restaurant = getRestaurantById(d.restaurantId);
+        return Boolean(d.restaurantName && restaurant?.city === city);
+      })
       .slice(0, 4);
-  }, [debounced]);
+  }, [debounced, city]);
 
   const hasMatches = restaurantResults.length > 0 || dishResults.length > 0;
   const showDropdown =
@@ -173,7 +179,7 @@ export function SearchAutocomplete({
       </div>
 
       {showDropdown && (
-        <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-50 overflow-hidden text-left">
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-50 overflow-hidden text-left">
           {debounced ? (
             <>
               {restaurantResults.length > 0 && (

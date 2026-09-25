@@ -103,7 +103,7 @@ export default function Favorites() {
                 {favoriteDishes.map(({ item, restaurant }) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3"
+                    className="flex items-center gap-3 bg-lavender-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-3"
                   >
                     {item.image && (
                       <img

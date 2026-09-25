@@ -166,7 +166,7 @@ export default function GroupOrderRoom() {
       </Link>
 
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
+      <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
@@ -216,7 +216,7 @@ export default function GroupOrderRoom() {
       </div>
 
       {/* Shared items */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
+      <div className="bg-lavender-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
             <Users size={18} /> Shared cart

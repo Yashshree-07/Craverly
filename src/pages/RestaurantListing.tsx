@@ -13,7 +13,7 @@ import {
 } from "../data/mockRestaurants";
 import { TRENDING_SEARCHES } from "../data/locations";
 import { useDebounce } from "../hooks/useDebounce";
-import { haversineDistanceKm } from "../lib/utils";
+import { estimateDeliveryEta, deliveryDistanceKm } from "../lib/eta";
 import { SearchX, RotateCcw, Flame } from "lucide-react";
 
 const PAGE_SIZE = 8;
@@ -43,7 +43,7 @@ export default function RestaurantListing() {
     resetFilters,
   } = useFilterStore();
 
-  const { latitude, longitude } = useLocationStore();
+  const { latitude, longitude, city } = useLocationStore();
 
   // Hydrate filter state from shared URL query params (on first mount)
   useEffect(() => {
@@ -118,7 +118,10 @@ export default function RestaurantListing() {
   }, []);
 
   const filteredRestaurants = useMemo(() => {
-    let results = [...mockRestaurants];
+    // Scope the listing to the selected city so picking a location swaps results.
+    let results = city
+      ? mockRestaurants.filter((r) => r.city === city)
+      : [...mockRestaurants];
 
     // Search filter — matches restaurant name, cuisines, AND dish names
     if (debouncedSearch.trim()) {
@@ -170,7 +173,10 @@ export default function RestaurantListing() {
 
     // Delivery time filter
     if (maxDeliveryTime != null) {
-      results = results.filter((r) => r.deliveryTimeMinutes <= maxDeliveryTime);
+      results = results.filter((r) => {
+        const dist = deliveryDistanceKm(r, { latitude, longitude });
+        return estimateDeliveryEta(r, { distanceKm: dist }).minutes <= maxDeliveryTime;
+      });
     }
 
     // Sorting
@@ -179,7 +185,14 @@ export default function RestaurantListing() {
         results.sort((a, b) => b.rating - a.rating);
         break;
       case "deliveryTime":
-        results.sort((a, b) => a.deliveryTimeMinutes - b.deliveryTimeMinutes);
+        results.sort((a, b) => {
+          const da = deliveryDistanceKm(a, { latitude, longitude });
+          const db = deliveryDistanceKm(b, { latitude, longitude });
+          return (
+            estimateDeliveryEta(a, { distanceKm: da }).minutes -
+            estimateDeliveryEta(b, { distanceKm: db }).minutes
+          );
+        });
         break;
       case "costLowHigh":
         results.sort((a, b) => a.costForTwo - b.costForTwo);
@@ -191,8 +204,8 @@ export default function RestaurantListing() {
         if (latitude != null && longitude != null) {
           results.sort(
             (a, b) =>
-              haversineDistanceKm(latitude, longitude, a.latitude, a.longitude) -
-              haversineDistanceKm(latitude, longitude, b.latitude, b.longitude)
+              deliveryDistanceKm(a, { latitude, longitude }) -
+              deliveryDistanceKm(b, { latitude, longitude })
           );
         }
         break;
@@ -203,12 +216,12 @@ export default function RestaurantListing() {
     }
 
     return results;
-  }, [debouncedSearch, cuisines, minRating, vegType, hasOffers, priceRange, maxDeliveryTime, sortBy, latitude, longitude]);
+  }, [debouncedSearch, cuisines, minRating, vegType, hasOffers, priceRange, maxDeliveryTime, sortBy, latitude, longitude, city]);
 
   // Start from the top when the result set changes
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [debouncedSearch, cuisines, minRating, vegType, hasOffers, priceRange, maxDeliveryTime, sortBy, latitude, longitude]);
+  }, [debouncedSearch, cuisines, minRating, vegType, hasOffers, priceRange, maxDeliveryTime, sortBy, latitude, longitude, city]);
 
   const visibleRestaurants = filteredRestaurants.slice(0, visibleCount);
   const hasMore = visibleCount < filteredRestaurants.length;
@@ -229,7 +242,7 @@ export default function RestaurantListing() {
         Restaurants {searchQuery && `matching "${searchQuery}"`}
       </h1>
       <p className="text-sm text-gray-500 mb-4">
-        {isLoading ? "Loading..." : `${filteredRestaurants.length} restaurants found`}
+        {isLoading ? "Loading..." : `${filteredRestaurants.length} restaurants in ${city}`}
       </p>
 
       <FilterBar />

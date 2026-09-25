@@ -4,7 +4,8 @@ import type { Restaurant } from "../../types/restaurant";
 import { Badge } from "../common/Badge";
 import { useUserStore } from "../../store/userStore";
 import { useLocationStore } from "../../store/locationStore";
-import { haversineDistanceKm, cn } from "../../lib/utils";
+import { cn } from "../../lib/utils";
+import { estimateDeliveryEta, formatEtaRange, deliveryDistanceKm } from "../../lib/eta";
 import { toast } from "sonner";
 
 interface RestaurantCardProps {
@@ -16,15 +17,9 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const isFavorite = user?.favoriteRestaurantIds.includes(restaurant.id) ?? false;
 
   const { latitude, longitude } = useLocationStore();
-  const distance =
-    latitude != null && longitude != null
-      ? haversineDistanceKm(
-          latitude,
-          longitude,
-          restaurant.latitude,
-          restaurant.longitude
-        )
-      : restaurant.distanceKm;
+  const distance = deliveryDistanceKm(restaurant, { latitude, longitude });
+
+  const eta = estimateDeliveryEta(restaurant, { distanceKm: distance });
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -42,7 +37,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
   return (
     <Link
       to={`/restaurant/${restaurant.id}`}
-      className="group block rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow bg-white dark:bg-gray-900"
+      className="group block rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow bg-lavender-50 dark:bg-gray-900"
     >
       <div className="relative h-40 overflow-hidden">
         <img
@@ -97,6 +92,12 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </div>
         </div>
 
+        {restaurant.source === "osm" && (
+          <p className="text-[10px] font-medium text-primary-600 dark:text-primary-300 uppercase tracking-wide mt-1">
+            Community mapped
+          </p>
+        )}
+
         <p className="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5">
           {restaurant.cuisines.join(", ")}
         </p>
@@ -106,7 +107,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1">
               <Clock size={13} />
-              {restaurant.deliveryTimeMinutes} min
+              {formatEtaRange(eta)}
             </span>
             <span className="text-xs text-gray-400">
               {distance} km

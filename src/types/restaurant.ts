@@ -56,6 +56,7 @@ export interface Restaurant {
   name: string;
   image: string;
   coverImage?: string;
+  source?: "osm" | "catalog";
   cuisines: string[];
   rating: number;
   ratingCount: number;
