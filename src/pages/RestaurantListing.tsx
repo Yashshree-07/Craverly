@@ -14,6 +14,8 @@ import {
 import { TRENDING_SEARCHES } from "../data/locations";
 import { useDebounce } from "../hooks/useDebounce";
 import { estimateDeliveryEta, deliveryDistanceKm } from "../lib/eta";
+import { getLiveRestaurants } from "../lib/liveRestaurants";
+import type { Restaurant } from "../types/restaurant";
 import { SearchX, RotateCcw, Flame } from "lucide-react";
 
 const PAGE_SIZE = 8;
@@ -21,6 +23,7 @@ const PAGE_SIZE = 8;
 export default function RestaurantListing() {
   const [isLoading, setIsLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [liveRestaurants, setLiveRestaurants] = useState<Restaurant[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const {
     searchQuery,
@@ -117,11 +120,35 @@ export default function RestaurantListing() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Pull in the same "live near you" places the homepage teases, so this page is
+  // the full list. Cached + de-duped inside getLiveRestaurants, so navigating
+  // back and forth does not re-hit OSM.
+  useEffect(() => {
+    let cancelled = false;
+    getLiveRestaurants(city)
+      .then((live) => {
+        if (!cancelled) setLiveRestaurants(live);
+      })
+      .catch(() => {
+        if (!cancelled) setLiveRestaurants([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [city]);
+
   const filteredRestaurants = useMemo(() => {
     // Scope the listing to the selected city so picking a location swaps results.
     let results = city
       ? mockRestaurants.filter((r) => r.city === city)
       : [...mockRestaurants];
+
+    // Append the live nearby places that are not already in the catalog. The
+    // live fallback is a subset of mockRestaurants, hence the id guard.
+    const catalogIds = new Set(results.map((r) => r.id));
+    for (const live of liveRestaurants) {
+      if (!catalogIds.has(live.id)) results.push(live);
+    }
 
     // Search filter — matches restaurant name, cuisines, AND dish names
     if (debouncedSearch.trim()) {
@@ -216,7 +243,7 @@ export default function RestaurantListing() {
     }
 
     return results;
-  }, [debouncedSearch, cuisines, minRating, vegType, hasOffers, priceRange, maxDeliveryTime, sortBy, latitude, longitude, city]);
+  }, [debouncedSearch, cuisines, minRating, vegType, hasOffers, priceRange, maxDeliveryTime, sortBy, latitude, longitude, city, liveRestaurants]);
 
   // Start from the top when the result set changes
   useEffect(() => {

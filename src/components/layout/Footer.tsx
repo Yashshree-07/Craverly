@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Share2, AtSign, Globe } from "lucide-react";
+import { FaInstagram, FaTwitter, FaFacebook } from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,9 +13,30 @@ export default function Footer() {
             Discover the best food & drinks in your city, delivered fast.
           </p>
           <div className="flex gap-3 mt-4">
-            <AtSign size={18} className="hover:text-primary-500 cursor-pointer" />
-            <Globe size={18} className="hover:text-primary-500 cursor-pointer" />
-            <Share2 size={18} className="hover:text-primary-500 cursor-pointer" />
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <FaInstagram size={18} className="hover:text-primary-500 cursor-pointer" />
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+            >
+              <FaTwitter size={18} className="hover:text-primary-500 cursor-pointer" />
+            </a>
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <FaFacebook size={18} className="hover:text-primary-500 cursor-pointer" />
+            </a>
           </div>
         </div>
 
