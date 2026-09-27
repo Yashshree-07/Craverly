@@ -1,16 +1,21 @@
-import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { ChatWidget } from "../chat/ChatWidget";
 import { Toaster } from "sonner";
 
 export default function Layout() {
+  const { pathname } = useLocation();
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem("craverly-theme");
     if (stored) return stored === "dark";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     const root = document.documentElement;
