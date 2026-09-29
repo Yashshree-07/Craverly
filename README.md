@@ -2,7 +2,7 @@
 
 A food delivery web app inspired by Zomato/Swiggy — built to go deep on real frontend engineering, not just clone a UI. Live location data, a working cart/checkout flow, real-time-feeling order tracking, and an AI chat assistant, all backed by a generated catalog of ~330 restaurants and ~5,100 menu items across 6 Indian cities.
 
-**🔗 Live demo:**(https://agent-6ab8a6e791bf295--courageous-hamster-cef312.netlify.app/) 
+**🔗 Live demo:**(https://6ab8b5a7cbfca0482a9971da--craverly.netlify.app/) 
 
 No login or setup needed — it runs fully in local mock mode out of the box. Supabase is optional, only needed for real persistence.
 
